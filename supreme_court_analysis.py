@@ -58,3 +58,35 @@ print('The avg number of Justices in minority pre1980 was: '
 
 print('The avg number of Justices in minority post1980 was: '
 + str( round (post1980_min_avg,2) ) )
+
+#Split the data for the pre and post 1980 to just include 9-0 and 5-4 decisions
+
+splitter = ( ( (pre1980['majVotes'] == 9) & (pre1980['minVotes'] == 0) ) |
+( (pre1980['majVotes'] == 5) & (pre1980['minVotes'] == 4) ) )
+
+pre1980_split = pre1980[splitter]
+
+splitter = ( ( (post1980['majVotes'] == 9) & (post1980['minVotes'] == 0) ) |
+( (post1980['majVotes'] == 5) & (post1980['minVotes'] == 4) ) )
+
+post1980_split = post1980[splitter]
+
+post1980_split_sums = post1980_split['majVotes'].value_counts().sort_index()
+post1980_split_normal = post1980_split_sums/sum(post1980_split_sums)
+
+pre1980_split_sums = pre1980_split['majVotes'].value_counts().sort_index()
+pre1980_split_normal = pre1980_split_sums/sum(pre1980_split_sums)
+
+#and then plot the histograms
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+width = 0.4
+plt.title('9-0 and 5-4 decisions')
+plt.xlabel('Justices')
+plt.ylabel('Fractional number of case')
+
+post1980_split_normal.plot(kind='bar', color='red', ax=ax, width=width, position=1,label = '1980 - 2017')
+pre1980_split_normal.plot(kind='bar', color='blue', ax=ax, width=width, position=0, label = '1946 - 1979')
+plt.legend(loc='upper left')
+plt.show()
